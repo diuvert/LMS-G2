@@ -1,0 +1,24 @@
+# Node
+node_modules/
+
+# Build outputs
+/dist/
+/.vite-cache/
+
+# Env files (never commit secrets)
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Misc
+*.log

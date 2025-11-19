@@ -1,0 +1,54 @@
+### LMS API Requests (use VS Code REST Client)
+
+@baseUrl = http://localhost:5000/api
+@json = Content-Type: application/json
+
+### Register
+POST {{baseUrl}}/auth/register
+{{json}}
+
+{
+  "name": "Karthik Instructor",
+  "email": "karthik@centennialcollege.ca",
+  "password": "password123",
+  "role": "instructor"
+}
+
+### Login
+POST {{baseUrl}}/auth/login
+{{json}}
+
+{
+  "email": "karthik@centennialcollege.ca",
+  "password": "password123"
+}
+
+### Me
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### Create Course (as instructor)
+POST {{baseUrl}}/courses
+Authorization: Bearer {{token}}
+{{json}}
+
+{
+  "title": "LMS-G2",
+  "description": "React LMS App"
+}
+
+### List Courses
+GET {{baseUrl}}/courses
+
+### Enroll as student (login student first to get token)
+POST {{baseUrl}}/enrollments
+Authorization: Bearer {{studentToken}}
+{{json}}
+
+{
+  "courseId": "<courseId>"
+}
+
+### Admin list users
+GET {{baseUrl}}/users
+Authorization: Bearer {{adminToken}}
