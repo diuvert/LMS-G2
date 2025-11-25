@@ -1,16 +1,22 @@
 import { useEffect, useState } from 'react';
 import { apiAuth } from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import { Search, BookOpen, Clock, Users, Plus } from 'lucide-react';
 
 export default function Courses() {
   const { user } = useAuth();
   const [courses, setCourses] = useState([]);
   const [form, setForm] = useState({ title: '', description: '' });
   const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const load = async () => {
-    const { data } = await apiAuth().get('/courses');
-    setCourses(data);
+    try {
+      const { data } = await apiAuth().get('/courses');
+      setCourses(data);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => { load(); }, []);
@@ -26,26 +32,98 @@ export default function Courses() {
     }
   };
 
+  const filteredCourses = courses.filter(c => 
+    c.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    c.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div>
-      <h2>Courses</h2>
-      {user?.role === 'instructor' || user?.role === 'admin' ? (
-        <form onSubmit={createCourse} className="inline-form">
-          <input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-          <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-          <button>Create</button>
-        </form>
-      ) : (
-        <p>Login as instructor to create courses.</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Courses Page</h1>
+        <p className="text-gray-600">Browse and enroll in available courses</p>
+      </div>
+
+      {/* Create Course Section for Instructors/Admins */}
+      {(user?.role === 'instructor' || user?.role === 'admin') && (
+        <div className="mb-8 bg-white p-6 border-2 border-gray-300 rounded-lg">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Create New Course</h3>
+          <form onSubmit={createCourse} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input 
+                placeholder="Course Title" 
+                value={form.title} 
+                onChange={(e) => setForm({ ...form, title: e.target.value })} 
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <input 
+                placeholder="Description" 
+                value={form.description} 
+                onChange={(e) => setForm({ ...form, description: e.target.value })} 
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+              <Plus className="h-4 w-4 mr-2" /> Create Course
+            </button>
+            {error && <p className="text-red-600">{error}</p>}
+          </form>
+        </div>
       )}
-      {error && <p className="error">{error}</p>}
-      <ul className="list">
-        {courses.map((c) => (
-          <li key={c._id}>
-            <strong>{c.title}</strong> – {c.description} ({c.instructor?.name || 'Unknown'})
-          </li>
+
+      <div className="mb-6">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search courses..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredCourses.map((course) => (
+          <div
+            key={course._id}
+            className="bg-white border-2 border-gray-300 rounded-lg p-6 hover:border-blue-500 transition-colors"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className="bg-blue-100 p-3 rounded-lg">
+                <BookOpen className="h-6 w-6 text-blue-600" />
+              </div>
+              <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                Beginner
+              </span>
+            </div>
+
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">{course.title}</h3>
+            <p className="text-gray-600 mb-4 line-clamp-2">{course.description}</p>
+
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center text-gray-600">
+                <Users className="h-4 w-4 mr-2" />
+                <span>120 students</span>
+              </div>
+              <div className="flex items-center text-gray-600">
+                <Clock className="h-4 w-4 mr-2" />
+                <span>8 weeks</span>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200 pt-4">
+              <p className="text-gray-600 mb-4">Instructor: {course.instructor?.name || 'Unknown'}</p>
+              <button className="w-full py-2 px-4 border-2 border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
+                Enroll Now
+              </button>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

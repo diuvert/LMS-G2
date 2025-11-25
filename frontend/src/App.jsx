@@ -9,25 +9,23 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 function App() {
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       <NavBar />
-      <div className="container">
-        <Routes>
-          <Route path="/" element={<Navigate to="/courses" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route
-            path="/enrollments"
-            element={<ProtectedRoute roles={['student','instructor','admin']}><Enrollments /></ProtectedRoute>}
-          />
-          <Route
-            path="/admin/users"
-            element={<ProtectedRoute roles={['admin']}><AdminUsers /></ProtectedRoute>}
-          />
-        </Routes>
-      </div>
-    </>
+      <Routes>
+        <Route path="/" element={<Navigate to="/courses" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route
+          path="/enrollments"
+          element={<ProtectedRoute roles={['student','instructor','admin']}><Enrollments /></ProtectedRoute>}
+        />
+        <Route
+          path="/admin/users"
+          element={<ProtectedRoute roles={['admin']}><AdminUsers /></ProtectedRoute>}
+        />
+      </Routes>
+    </div>
   );
 }
 
