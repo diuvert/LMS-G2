@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiAuth } from '../services/api.js';
-import { BookOpen, Calendar, TrendingUp, Play } from 'lucide-react';
+import { BookOpen, Calendar, TrendingUp, Play, Trash2 } from 'lucide-react';
 
 export default function Enrollments() {
   const [enrollments, setEnrollments] = useState([]);
@@ -11,6 +11,16 @@ export default function Enrollments() {
       setEnrollments(data);
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const dropCourse = async (id) => {
+    if (!confirm('Are you sure you want to drop this course?')) return;
+    try {
+      await apiAuth().delete(`/enrollments/${id}`);
+      load();
+    } catch (e) {
+      alert('Could not drop course');
     }
   };
 
@@ -96,11 +106,10 @@ export default function Enrollments() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        enrollment.status === 'completed'
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${enrollment.status === 'completed'
                           ? 'bg-green-100 text-green-800'
                           : 'bg-orange-100 text-orange-800'
-                      }`}
+                        }`}
                     >
                       {enrollment.status}
                     </span>
@@ -109,6 +118,13 @@ export default function Enrollments() {
                     <button className="inline-flex items-center px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
                       <Play className="h-4 w-4 mr-1" />
                       {enrollment.status === 'completed' ? 'Review' : 'Continue'}
+                    </button>
+                    <button
+                      onClick={() => dropCourse(enrollment._id)}
+                      className="ml-2 inline-flex items-center px-3 py-1 border border-red-300 text-red-600 rounded-md hover:bg-red-50 transition-colors"
+                      title="Drop Course"
+                    >
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </td>
                 </tr>
