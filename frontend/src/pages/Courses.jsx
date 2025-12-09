@@ -59,9 +59,15 @@ export default function Courses() {
   const handleEnroll = async (courseId) => {
     try {
       await apiAuth().post('/enrollments', { courseId });
+      alert('Successfully enrolled in the course!');
       navigate('/enrollments');
     } catch (e) {
-      setError('Could not enroll in course');
+      if (e.response?.status === 409) {
+        alert('You are already enrolled in this course');
+      } else {
+        alert('Could not enroll in course. Please try again.');
+      }
+      console.error(e);
     }
   };
 
