@@ -1,0 +1,38 @@
+services:
+  # Backend API Service
+  - type: web
+    name: lms-backend
+    env: node
+    region: ohio
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false # User must input this in Dashboard
+
+  # Frontend Static Site
+  - type: static
+    name: lms-frontend
+    env: static
+    region: ohio
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: lms-backend
+          property: url
+        # Note: frontend code should append '/api' if VITE_API_URL is just the base domain
+        # The current api.js code uses it directly as baseURL.
+        # If Render provides `https://lms-backend...`, we need code to handle it or append /api here if supported.
+        # But Blueprint doesn't support appending strings easily.
+        # Strategy: Update api.js to append /api if missing, or user updates var manually.
