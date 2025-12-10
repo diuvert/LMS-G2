@@ -12,6 +12,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 app.get('/', (req, res) => res.json({ status: 'ok', name: 'LMS API' }));
+app.get('/api', (req, res) => res.json({ status: 'ok' }));
 app.use('/api', routes);
 
 app.use(notFound);
