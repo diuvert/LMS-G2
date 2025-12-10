@@ -1,0 +1,499 @@
+{
+	"info": {
+		"_postman_id": "lms-backend-api",
+		"name": "LMS Backend API - Production",
+		"description": "API endpoints for LMS Backend deployed on Render",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://lms-g2.onrender.com",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "GET / (Root Health Check)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": ["{{baseUrl}}"],
+							"path": [""]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api (API Health Check)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api",
+							"host": ["{{baseUrl}}"],
+							"path": ["api"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register Student",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"newstudent@example.com\",\n  \"password\": \"Password123!\",\n  \"name\": \"New Student\",\n  \"role\": \"student\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as Student",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"student1@my.centennialcollege.ca\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin1@my.centennialcollege.ca\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as Instructor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"karthik@my.centennialcollege.ca\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Courses",
+			"item": [
+				{
+					"name": "Get All Courses (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/courses",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Course by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/courses/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "REPLACE_WITH_COURSE_ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Course (Admin/Instructor)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"COMP300 - Advanced Topics\",\n  \"description\": \"Advanced computer science topics\",\n  \"level\": \"Advanced\",\n  \"duration\": \"12 weeks\",\n  \"studentCount\": 0\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/courses",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Course (Admin/Instructor)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"COMP300 - Advanced Topics (Updated)\",\n  \"description\": \"Updated description\",\n  \"level\": \"Advanced\",\n  \"duration\": \"14 weeks\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/courses/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "REPLACE_WITH_COURSE_ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Course (Admin Only)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/courses/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "REPLACE_WITH_COURSE_ID"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Enrollments",
+			"item": [
+				{
+					"name": "Get My Enrollments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/enrollments",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "enrollments"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enroll in Course (Student)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"courseId\": \"REPLACE_WITH_COURSE_ID\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/enrollments",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "enrollments"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unenroll from Course",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/enrollments/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "enrollments", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "REPLACE_WITH_ENROLLMENT_ID"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users (Admin Only)",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"newuser@example.com\",\n  \"password\": \"Password123!\",\n  \"name\": \"New User\",\n  \"role\": \"student\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Name\",\n  \"role\": \"instructor\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "REPLACE_WITH_USER_ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "REPLACE_WITH_USER_ID"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
